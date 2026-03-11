@@ -1,0 +1,51 @@
+"""
+事件总线（从原框架保留）：支持发布/订阅 + SSE 流。
+"""
+
+from __future__ import annotations
+
+import asyncio
+import logging
+from collections import defaultdict
+from datetime import datetime, timezone
+
+logger = logging.getLogger(__name__)
+
+
+class EventBus:
+    def __init__(self) -> None:
+        self._history: dict[str, list[dict]] = defaultdict(list)
+        self._subscribers: dict[str, list[asyncio.Queue]] = defaultdict(list)
+
+    def publish(self, session_id: str, event_type: str, message: str, payload: dict | None = None) -> None:
+        event = {
+            "type": event_type,
+            "session_id": session_id,
+            "message": message,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "payload": payload or {},
+        }
+        self._history[session_id].append(event)
+        for queue in self._subscribers[session_id]:
+            queue.put_nowait(event)
+        logger.info("[%s] %s: %s", session_id[:8], event_type, message)
+
+    def history(self, session_id: str) -> list[dict]:
+        return self._history[session_id]
+
+    def reset(self, session_id: str) -> None:
+        self._history[session_id].clear()
+
+    async def stream(self, session_id: str):
+        queue: asyncio.Queue = asyncio.Queue()
+        self._subscribers[session_id].append(queue)
+        try:
+            for event in self._history[session_id]:
+                yield event
+            while True:
+                yield await queue.get()
+        finally:
+            self._subscribers[session_id].remove(queue)
+
+
+event_bus = EventBus()

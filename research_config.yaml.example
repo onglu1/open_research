@@ -1,0 +1,110 @@
+# ============================================================
+# Research Idea Discovery & Plan Generation — 示例配置
+# ============================================================
+# 将本文件复制为 research_config.yaml 并按需修改。
+# 形如 ${VAR} 的值会自动替换为同名环境变量。
+
+research_direction:
+  name: "大语言模型推理容错"
+  description: >
+    研究大模型在高故障率环境下推理过程的可靠性、鲁棒性与容错恢复机制
+  keywords_en:
+    - "large language models"
+    - "chain-of-thought reasoning"
+    - "reasoning robustness"
+    - "inference reliability"
+    - "fault tolerance"
+    - "error recovery"
+    - "test-time robustness"
+  keywords_cn:
+    - "大语言模型推理容错"
+    - "推理鲁棒性"
+    - "容错恢复"
+  categories:
+    - "cs.CL"
+    - "cs.LG"
+    - "cs.AI"
+
+expansion:
+  strategies:
+    - "cross_domain"
+    - "methodology_transfer"
+    - "application_driven"
+  external_directions:
+    - name: "分布式系统容错"
+      name_en: "Distributed System Fault Tolerance"
+      description: "分布式计算环境下的故障检测、恢复与冗余机制"
+  parallel_directions:
+    - name: "大模型量化方法"
+      name_en: "LLM Quantization Methods"
+      description: "通过低比特量化等技术缩减模型体积与推理开销"
+    - name: "大模型可解释性"
+      name_en: "LLM Interpretability"
+      description: "研究大语言模型内部推理机制的可解释性与透明性"
+    - name: "容错系统"
+      name_en: "Fault-Tolerant Systems"
+      description: "研究分布式与计算系统中的容错机制与可靠性保障"
+  forced_crosses:
+    - ["大语言模型推理容错", "容错系统"]
+
+paper_search:
+  time_range_days: 180
+  max_papers_per_direction: 50
+  filter_words: []
+  sources:
+    - "arxiv"
+    - "semantic_scholar"
+  request_max_retries: 3
+  score_weights:
+    citation_count: 0.3
+    recency: 0.3
+    relevance: 0.4
+  request_interval_seconds: 1.5
+
+idea_generation:
+  max_ideas: 20
+  strategies:
+    - "gap_filling"
+    - "method_combination"
+    - "cross_domain_transfer"
+  encourage_cross_direction: true
+
+feasibility:
+  dimensions:
+    novelty:      { weight: 0.25, description: "方法或视角的新颖程度" }
+    feasibility:  { weight: 0.25, description: "在现有资源下的可实现性" }
+    impact:       { weight: 0.15, description: "对领域的潜在影响力" }
+    effort:       { weight: 0.2, description: "预期工作量" }
+    risk:         { weight: 0.15, description: "技术和执行风险" }
+  tier_thresholds:
+    S: 85
+    A: 70
+    B: 55
+    C: 0
+
+resource_constraints:
+  gpu: "4x A100 80GB"
+  time_budget_months: 6
+  team_size: 3
+  compute_budget: "moderate"
+
+# LLM 配置：支持任何 OpenAI 兼容 API（如 zhipu、deepseek、openai 等）
+# api_key 也可通过环境变量设置：export RESEARCH_LLM_API_KEY=your-key
+llm:
+  provider: "zhipu"                                          # 标识名，不影响实际调用
+  base_url: "https://open.bigmodel.cn/api/coding/paas/v4"   # OpenAI 兼容端点
+  api_key: "${RESEARCH_LLM_API_KEY}"                         # 替换为你的 API Key 或使用环境变量
+  model: "glm-4"                                             # 模型名称
+  temperature: 0.8
+  max_retries: 5
+
+knowledge_base:
+  existing_research: "knowledge/existing_research.md"
+  existing_ideas: "knowledge/existing_ideas.md"
+  paper_notes_dir: "knowledge/paper_notes/"
+
+pipeline:
+  stages: [1, 2, 3, 4, 5]
+  resume_from: null
+  continue_from: null   # 可填已有 session 名或路径；会从第一个未完成 stage 开始继续
+  output_dir: "output"

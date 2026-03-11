@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# 虚拟环境
+.venv/
+venv/
+
+# 运行时存储
+backend/storage/
+output/
+
+# knowledge 目录：保留模板文件，忽略用户自定义笔记内容
+knowledge/paper_notes/*.md
+!knowledge/paper_notes/.gitkeep
+
+# 配置中的敏感信息
+*.yaml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

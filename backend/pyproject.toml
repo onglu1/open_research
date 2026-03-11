@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "research-engine"
+version = "0.1.0"
+description = "科研 Idea 发掘与研究计划生成系统：配置驱动的五阶段研究决策流水线。"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115,<1.0",
+  "uvicorn[standard]>=0.34,<1.0",
+  "httpx>=0.28.1",
+  "pyyaml>=6.0",
+  "pydantic>=2.0",
+]
+
+[project.scripts]
+research_engine = "research_engine.__main__:main"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.5",
+  "pytest-cov>=6.0.0",
+  "pytest-asyncio>=0.24.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
